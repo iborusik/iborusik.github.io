@@ -6,7 +6,7 @@
   
 Sometimes we use "std::function" like _magic box_ and don't really care what's happening under hood.
 But things getting worse in complex apps that have intensive usage of it. To get proper decision where to use it or switch to 
-regular function, or check other variants, we need to understand how it really work.
+regular function, or check other variants, we need to understand how it really works.
 
 > 
 > ### 1. Lest refresh things.
@@ -74,7 +74,7 @@ int main (int argc, const char* argv[])
 }
 ```  
     
-Let's check what we get, by compiling it ot LLVM-IR:  
+Let's check what do we get, by compiling it ot LLVM-IR:  
 
 ```bash
     $clang++ -O1 -S -emit-llvm  -std=c++11 ../main.cpp
@@ -118,7 +118,7 @@ int main (int argc, const char* argv[])
 }
 ```
 
-We can see the result:
+Let's check the result:
 
 ``` llvm
 define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr #1 personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*) {
@@ -159,7 +159,7 @@ copied(in case they captured by value), calling copy-constructors and destructor
 
 &nbsp;
 > 
-> ### 3. Some more examples.
+> ### 3. Her one more example.
 > 
 
 Let's imagine we have code block like this:
@@ -174,9 +174,9 @@ Let's imagine we have code block like this:
     };
 ```
 
-How this can be implemented without "std:function" template?
+How this can be implemented without the "std:function" template?
   
-It can be something like this(it's just common idea, not real impl):
+It can be something like this(it's just a basic idea, not real impl):
 
 ```c++
 struct maybe_lambda {
@@ -233,7 +233,7 @@ int main (int argc, const char* argv[])
 
 As you can see yourself, no magic is happening here. Compiler will generate this for us.  
   
-The output of this code is:
+The output is:
 
 ```bash
 some_str: abc
