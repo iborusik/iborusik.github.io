@@ -5,14 +5,14 @@
 >
   
 Sometimes we use "std::function" like _magic box_ and don't really care what's happening under hood.
-But things getting worse in complex apps that have intensive usage of it. To get proper decision where to use it or switch to 
+But things are getting worse in complex apps that have intensive usage of it. To get proper decision where to use it or switch to 
 regular function, or check other variants, we need to understand how it really works.
 
 > 
 > ### 1. Lest refresh things.
 > 
 
-We can pass object in **C++** in 2 ways:
+We can pass an object in **C++** in 2 ways:
 
 ```c++
 // 1. pass-by-value
@@ -57,7 +57,7 @@ _To answer this question we need to remember that in C++ lambda is implemented a
 
 Lets check 2 cases:
 
-1. **The first case**, define a function that accepts argument by const reference
+1. **The first one**, let's define a function that accepts argument by const reference
 
 ```c++
 void call_fun(std::function<void(void)>& f) {
@@ -79,6 +79,9 @@ Let's check what do we get, by compiling it ot LLVM-IR:
 ```bash
     $clang++ -O1 -S -emit-llvm  -std=c++11 ../main.cpp
 ``` 
+
+{: .box-note}
+You can read more about LLVM-IR [here](https://mukulrathi.com/create-your-own-programming-language/llvm-ir-cpp-api-tutorial/)
   
 As output we get:   
     
@@ -99,7 +102,7 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr #1 perso
 }
 ```  
   
-  As you can se, internally it creates a function object(functor) and passes it to the **"call_func"**
+  As you can see, it internally creates a function object(functor) and passes it to the **"call_func"**
 
  
 2. **The second case**, define a function that accepts argument by value
@@ -148,21 +151,23 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr #1 perso
 > ### 2. Summary.
 >
 
-It's the main difference why passing std::function by value isn't for free. Each time you pass it by value, you'll get a copy of 
+That's the difference. Each time you pass it by value, you'll get a copy of 
 the std::function object.  
   
 Of course, the compiler will optimize such kind of std::function and will not create any actual objects(__you can check this yourself by providing
 "-O3" optimization flag instead of "-01").
 
-But if your lambda will have any **captured** variables(it will have any state), all of your objects will be 
-copied(in case they captured by value), calling copy-constructors and destructors.
+But if your lambda will have any **captured** variables(it has a state), all of your objects will be 
+copied(in case they captured by value), calling copy-constructors and destructors. If captured objects isn't just
+a [POD](https://wiki.c2.com/?PlainOldData), they can have heap allocations, non-trivial destructors.
+This will cause performance issues with your code.
 
 &nbsp;
 > 
 > ### 3. Her one more example.
 > 
 
-Let's imagine we have code block like this:
+Let's imagine we have a code block like this:
 
 ```c++
     int int_val = 10;
@@ -186,7 +191,9 @@ struct maybe_lambda {
         {
         }
         
-
+    
+    // to pass object by value wee need to define
+    // a copy constructor
     maybe_lambda(const maybe_lambda& other):
         int_val(other.int_val),
         some_str(other.some_str)
