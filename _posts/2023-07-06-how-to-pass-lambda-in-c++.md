@@ -146,6 +146,11 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr #1 perso
   ret i32 0
 }
 ```  
+
+We can compile it to actual binary and check output with Hopper Disassembler.
+
+[![alt text](/assets/img/posts/2023-07-06-how-to-pass-lambda-in-cpp-1.png "Title")](/assets/img/posts/2023-07-06-how-to-pass-lambda-in-cpp-1.png)
+
 &nbsp;
 > 
 > ### 2. Summary.
