@@ -35,6 +35,7 @@ void fun(const std::function<int(void)>& f);
 >int main (int argc, const char* argv[])
 >{
 >  // in this case argument is temporary(r-value).
+> // error - compiler cant take reference of temporary
 >  fun_call(std::function<int(void)>([]{
 >      printf("lambda rv call\n");
 >      return 0;
@@ -169,7 +170,7 @@ This will cause performance issues with your code.
 
 &nbsp;
 > 
-> ### 3. Her one more example.
+> ### 3. Here is one more example.
 > 
 
 Let's imagine we have a code block like this:
