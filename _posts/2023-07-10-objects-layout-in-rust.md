@@ -81,6 +81,8 @@ Just prepend structure with __#[repr(C)]__. This forces the compiler to keep ord
 But we remember that we should always keep things aligned. So how to fulfill both conditions?  
 Just add some "empty" bytes as "padding". And yes, this'll increase structure size.
 
+<div id="Picture3"></div>
+#### Picture 3:
 [![alt text](/assets/img/posts/2023-07-10-objects-layout-in-rust-3.png "Title")](/assets/img/posts/2023-07-10-objects-layout-in-rust-3.png)
 
 You can see that we've got some padding. Structure size is 24. And now order is the same as we defined.
@@ -156,3 +158,38 @@ fn main() {
 }
 {% endraw %}
 ```
+
+With output:
+
+```bash
+> ad_of: 0x7ff7bfefe020, size: 24
+> ad_of_b: 0x7ff7bfefe028
+> offsets: a: 0x0, b: 0x8, c: 0x10, d: 0x11
+> 0xaabbccff, 0xffaaffaaffaaffaa, false, true
+```
+
+Here we define same structure and add **#[repr(C)]** to force C-styled memory layout.  
+You'get same layout as at [picture 3](#Picture3). 4-byte **A::a** u32 with 4-byte padding. Then b-byte **B::b**.
+You can check in output - offset of is **b:0x8**. To calculate offsets we use handy ___calc_offset__ macros.  
+  
+The actual address of the structure in my case(__in your case it can be different__) is **0x7ff7bfefe020**. It's allocated on stack, so it's local variable.  
+1. At first we take raw pointer to the structure itself:
+```rust 
+    let ptr_to_a: *mut A = (&mut a) as *mut A;
+```
+2. Then convert it to the pointer to ***mut u8**. We do this to be able to do per-byte shift.
+```rust 
+    let ptr_u8: *mut u8 = ptr_to_a as *mut u8;
+```
+3. Shift the pointer to the **A::b** by the offset of **b**
+```rust
+ let shifted_ptr: *mut u64 = ptr_u8.offset(ofs_b) as *mut u64;
+```
+4. Actual write:
+```rust
+    unsafe {
+        *ptr_to_b = new_value;
+    }
+```
+
+In next post I'll check what is the memory layout of Trait object and VTables.
