@@ -1,8 +1,10 @@
 ---
 layout: page
-title: About me
-subtitle: Why you'd want to go on a date with me
+title: About
+subtitle: Dmytro Borysov
 ---
 
-### My story
+Hi, I'm Dmytro. **C++** game developer from Ukraine. In this blog you can read about thing I'm working with. Mostly C++, RUST, tools.
+
+
 

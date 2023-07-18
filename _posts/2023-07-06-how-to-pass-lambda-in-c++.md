@@ -1,3 +1,9 @@
+---
+layout: post
+title: How To Pass Lambda In C++
+tags: [C++,lambda,std::function,function]
+---
+
 ## How to better to pass lambda in C++. Part 1.
 
 > 

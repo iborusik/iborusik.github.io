@@ -1,3 +1,9 @@
+---
+layout: post
+title: References Lifetime In C++
+tags: [C++]
+---
+
 ## References lifetime in C++ and ways to handle this.
 
 > 

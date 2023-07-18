@@ -1,3 +1,10 @@
+---
+layout: post
+title: Objects layout in RUST. Part1
+subtitle: Memory representation.
+tags: [RUST,memory,structure]
+---
+
 ## Objects layout in RUST. Part1
 
 Sometimes it's good to know what's internal representation of objects in *RUST*.
